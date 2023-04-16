@@ -3,7 +3,7 @@
 
 
 Projenin Deploy edilmiş ilk hali ::
-https://hsynkrmn-pos-application-react.onrender.com
+http://hsyn-pos-application.surge.sh
 
 
 Şuanda  Uygulamada :
