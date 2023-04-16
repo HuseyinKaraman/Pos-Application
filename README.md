@@ -6,8 +6,8 @@ Projenin Deploy edilmiş ilk hali ::
 http://hsyn-pos-application.surge.sh
 
 
-Şuanda  Uygulamada :
-Category ekleme,düzenleme,silme,
-Product ekleme,düzenleme,silme,
-Cart'a Ürün ekleme,silme,miktar arttırma ve azaltma
-Login ve Register işlemleri yapılmaktadir.
+Şuanda  Uygulamada : <br/>
+Category ekleme,düzenleme,silme,  <br/>
+Product ekleme,düzenleme,silme, <br/>
+Cart'a Ürün ekleme,silme,miktar arttırma ve azaltma <br/>
+Login ve Register işlemleri yapılmaktadir. <br/>
