@@ -1,0 +1,8 @@
+.product-item{
+    @apply border hover:shadow-2xl cursor-pointer transition-all select-none
+}
+
+
+.product-edit {
+    @apply hover:opacity-90 h-[218px] w-full flex justify-center items-center cursor-pointer
+}

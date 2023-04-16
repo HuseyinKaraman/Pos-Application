@@ -1,0 +1,40 @@
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+@import url("https://fonts.googleapis.com/css2?family=Electrolize&display=swap");
+
+body {
+  margin: 0;
+  font-family: "Electrolize", sans-serif;
+  @apply bg-gray-50
+}
+
+/** tailwind hatası giderildi*/
+.ant-btn-primary {
+  background-color: #1677ff;
+}
+
+.products::-webkit-scrollbar {
+  display: none; /* Safari and Chrome */
+}
+.products {
+  -ms-overflow-style: none;
+  scrollbar-width: none;
+}
+
+@media (min-width: 768px) {
+
+  .products,
+  .categories,
+  .cart-items {
+    -ms-overflow-style: none;
+    scrollbar-width: none;
+  }
+  
+  .products::-webkit-scrollbar,
+  .categories::-webkit-scrollbar,
+  .cart-items::-webkit-scrollbar {
+    display: none; /* Safari and Chrome */
+  }
+}
