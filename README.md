@@ -13,8 +13,8 @@ Cart'a Ürün ekleme,silme,miktar arttırma ve azaltma <br/>
 Login ve Register işlemleri yapılmaktadir. <br/>
 
 
-<h3 align="center">Kullanılan Teknolojiler</h3>
-<p align="center"> 
+<h3 align="left">Kullanılan Teknolojiler</h3>
+<p align="left"> 
     <a href="https://www.mongodb.com/" target="_blank" rel="noreferrer"> <img src="https://raw.githubusercontent.com/devicons/devicon/master/icons/mongodb/mongodb-original-wordmark.svg" alt="mongodb" width="50" height="50"/> </a> &nbsp;&nbsp;&nbsp;
 <a href="" target="_blank" rel="noreferrer"> <img src="https://w7.pngwing.com/pngs/925/447/png-transparent-express-js-node-js-javascript-mongodb-node-js-text-trademark-logo.png" alt="express" width="50" height="50"/> </a> &nbsp;&nbsp;&nbsp;
  <a href="https://reactjs.org/" target="_blank" rel="noreferrer"> <img src="https://raw.githubusercontent.com/devicons/devicon/master/icons/react/react-original-wordmark.svg" alt="react" width="50" height="50"/> </a> &nbsp;&nbsp;&nbsp;
