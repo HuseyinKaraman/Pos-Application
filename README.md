@@ -1,19 +1,26 @@
-# Pos-Application
+# Mern STACK - Pos Application
 Üretken Akedemi Bitirme Projesi
 
+<br/>
+Merhaba, Bu proje MERN(MongoDB, Express.js, React.js, Node.js) Stack teknolojisi kullanılarak oluşturulmuştur. 
+Ayrıca populer ve önemli teknolojiler içermektedir Ant Design, Tailwind CSS ve Redux-Toolkit.
+<br/>
 
 Projenin Deploy edilmiş ilk hali ::
 http://hsyn-pos-application.surge.sh
 
 
-Şuanda  Uygulamada : <br/>
-Login ve Register işlemleri yapılmaktadir. <br/>
-Category ekleme,düzenleme,silme,  <br/>
-Product ekleme,düzenleme,silme, <br/>
-Cart'a Ürün ekleme,silme,miktar arttırma ve azaltma <br/>
-Bill oluşturma ve çıktı alma <br/>
+Şuanda  Uygulamada Kısaca: <br/>
+Login ve Register işlemleri, <br/>
+Category ekleme,düzenleme,silme işlemleri,  <br/>
+Product ekleme,düzenleme,silme  işlemleri, <br/>
+Cart'a Ürün ekleme,silme,miktar arttırma ve azaltma  işlemleri<br/>
+Bill oluşturma ve çıktı alma  işlemlerini yapmaktadır<br/>
 
+email -> test@test.com 
+şifre -> 123456
 
+<br/>
 
 <h3 align="left">Kullanılan Teknolojiler</h3>
 <p align="left"> 
