@@ -10,6 +10,9 @@ Projenin Deploy edilmiş ilk hali ::
 http://hsyn-pos-application.surge.sh
 
 
+email -> test@test.com <br/>
+şifre -> 123456 <br/>
+
 Şuanda  Uygulamada Kısaca: <br/>
 Login ve Register işlemleri, <br/>
 Category ekleme,düzenleme,silme işlemleri,  <br/>
@@ -17,10 +20,6 @@ Product ekleme,düzenleme,silme  işlemleri, <br/>
 Cart'a Ürün ekleme,silme,miktar arttırma ve azaltma  işlemleri<br/>
 Bill oluşturma ve çıktı alma  işlemlerini yapmaktadır<br/>
 
-email -> test@test.com 
-şifre -> 123456
-
-<br/>
 
 <h3 align="left">Kullanılan Teknolojiler</h3>
 <p align="left"> 
