@@ -7,10 +7,12 @@ http://hsyn-pos-application.surge.sh
 
 
 Şuanda  Uygulamada : <br/>
+Login ve Register işlemleri yapılmaktadir. <br/>
 Category ekleme,düzenleme,silme,  <br/>
 Product ekleme,düzenleme,silme, <br/>
 Cart'a Ürün ekleme,silme,miktar arttırma ve azaltma <br/>
-Login ve Register işlemleri yapılmaktadir. <br/>
+Bill oluşturma ve çıktı alma <br/>
+
 
 
 <h3 align="left">Kullanılan Teknolojiler</h3>
