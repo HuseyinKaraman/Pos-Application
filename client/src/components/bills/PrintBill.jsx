@@ -1,13 +1,21 @@
 import { Button, Modal } from "antd";
+import { useRef } from "react";
+import { useReactToPrint } from "react-to-print";
 
-const PrintBill = ({ isModalOpen, setIsModalOpen }) => {
+const PrintBill = ({ isModalOpen, setIsModalOpen, customer }) => {
+  const componentRef = useRef();
+
   const handleCancel = () => {
     setIsModalOpen(false);
   };
 
+  const handlePrint = useReactToPrint({
+    content: ()=> componentRef.current,
+  })
+  
   return (
     <Modal title="Order Form" open={isModalOpen} footer={false} onCancel={handleCancel} width={800}>
-      <section className="py-20 bg-black">
+      <section className="py-20 bg-black" ref={componentRef}>
         <div className="max-w-5xl bg-white mx-auto px-6">
           <article className="overflow-hidden">
             <div className="logo my-6">
@@ -17,6 +25,7 @@ const PrintBill = ({ isModalOpen, setIsModalOpen }) => {
               <div className="grid sm:grid-cols-4 grid-cols-3 gap-2 md:gap-10">
                 <div className="text-sm text-slate-500">
                   <p className="font-bold text-slate-700">Bill Detail</p>
+                  <p>{customer?.customerName}</p>
                   <p className="">Kazım karabekir mah</p>
                   <p className="">76.sok no:9/1</p>
                   <p className="">Bahçelievler/ISTANBUL</p>
@@ -31,11 +40,11 @@ const PrintBill = ({ isModalOpen, setIsModalOpen }) => {
                 <div className="text-sm text-slate-500">
                   <div className="">
                     <p className="font-bold text-slate-700">Bill Number:</p>
-                    <p className="">0052124</p>
+                    <p className="">{customer?._id}</p>
                   </div>
                   <div className="mt-2">
                     <p className="font-bold text-slate-700">Date Of Issue:</p>
-                    <p className="">2022-04-12</p>
+                    <p className="">{customer?.createdAt?.substring(0, 10)}</p>
                   </div>
                 </div>
                 <div className="text-sm text-slate-500 sm:block hidden">
@@ -53,7 +62,7 @@ const PrintBill = ({ isModalOpen, setIsModalOpen }) => {
             <div className="bill-table-area mt-8">
               <table className="min-w-full divide-y divide-slate-500 overflow-hidden">
                 <thead>
-                  <tr  className="border-b border-slate-200">
+                  <tr className="border-b border-slate-200">
                     <th scope="col" className="py-3.5 md:pl-0 text-left text-sm font-normal text-slate-700 sm:table-cell hidden">
                       Image
                     </th>
@@ -75,36 +84,34 @@ const PrintBill = ({ isModalOpen, setIsModalOpen }) => {
                   </tr>
                 </thead>
                 <tbody>
-                  <tr className="border-b border-slate-200">
-                    <td className="py-4 text-left  md:pl-0 sm:table-cell hidden">
-                      <img
-                        className="w-12 h-12 object-cover"
-                        src="https://images.hindustantimes.com/img/2022/08/07/550x309/cat_1659882617172_1659882628989_1659882628989.jpg"
-                        alt=""
-                      />
-                    </td>
-                    <td className="py-4 text-left md:pl-0 hidden sm:table-cell">
-                      <div className="flex flex-col">
-                        <span className="font-semibold sm:font-normal">Şalgam</span>
-                        <div className="sm:hidden inline-block text-xs">Unit Price</div>
-                      </div>
-                    </td>
-                    <td className="py-4 text-left md:pl-0 sm:hidden" colSpan={4}>
-                      <div className="flex flex-col">
-                        <span className="font-semibold sm:font-normal">Şalgam</span>
-                        <div className="sm:hidden inline-block text-xs">Unit Price</div>
-                      </div>
-                    </td>
-                    <td className="py-4 text-left sm:pl-3 sm:table-cell hidden">
-                      <span>12₺</span>
-                    </td>
-                    <td className="py-4 text-left sm:pl-3 sm:table-cell hidden">
-                      <span>2</span>
-                    </td>
-                    <td className="py-4 text-right md:pl-0">
-                      <span>24₺</span>
-                    </td>
-                  </tr>
+                  {customer?.cartItems?.map((record) => (
+                    <tr className="border-b border-slate-200" key={record._id}>
+                      <td className="py-4 text-left  md:pl-0 sm:table-cell hidden">
+                        <img className="w-12 h-12 object-cover" src={record.product.img} alt="" />
+                      </td>
+                      <td className="py-4 text-left md:pl-0 hidden sm:table-cell">
+                        <div className="flex flex-col">
+                          <span className="font-semibold sm:font-normal">{record.product.title}</span>
+                          <div className="sm:hidden inline-block text-xs">Unit Price</div>
+                        </div>
+                      </td>
+                      <td className="py-4 text-left md:pl-0 sm:hidden" colSpan={4}>
+                        <div className="flex flex-col">
+                          <span className="font-semibold sm:font-normal">{record.product.title}</span>
+                          <div className="sm:hidden inline-block text-xs">Unit Price</div>
+                        </div>
+                      </td>
+                      <td className="py-4 text-left sm:pl-3 sm:table-cell hidden">
+                        <span>{record.product.price}₺</span>
+                      </td>
+                      <td className="py-4 text-left sm:pl-3 sm:table-cell hidden">
+                        <span>{record.quantity}</span>
+                      </td>
+                      <td className="py-4 text-right md:pl-0">
+                        <span>{(record.product.price * record.quantity).toFixed(2)}₺</span>
+                      </td>
+                    </tr>
+                  ))}
                 </tbody>
                 <tfoot>
                   <tr>
@@ -115,7 +122,7 @@ const PrintBill = ({ isModalOpen, setIsModalOpen }) => {
                       <p className="font-normal text-slate-700">Sub Total</p>
                     </th>
                     <th className="text-right pt-6">
-                      <span className="font-normal text-slate-700">61₺</span>
+                      <span className="font-normal text-slate-700">{(customer?.subTotal).toFixed(2)}₺</span>
                     </th>
                   </tr>
                   <tr>
@@ -126,7 +133,7 @@ const PrintBill = ({ isModalOpen, setIsModalOpen }) => {
                       <span className="font-normal text-slate-700">Tax</span>
                     </th>
                     <th className="pt-4 text-right">
-                      <span className="font-normal text-red-600">7.92₺</span>
+                      <span className="font-normal text-red-600">+{((customer?.subTotal * customer?.taxRate) / 100).toFixed(2)}₺</span>
                     </th>
                   </tr>
                   <tr>
@@ -137,7 +144,9 @@ const PrintBill = ({ isModalOpen, setIsModalOpen }) => {
                       <span className="font-bold text-slate-700">Total</span>
                     </th>
                     <th className="pt-4 text-right">
-                      <span className="font-bold text-slate-700">99₺</span>
+                      <span className="font-bold text-slate-700">
+                        {(customer?.subTotal + (customer?.subTotal * customer?.taxRate) / 100).toFixed(2)}₺
+                      </span>
                     </th>
                   </tr>
                 </tfoot>
@@ -158,7 +167,9 @@ const PrintBill = ({ isModalOpen, setIsModalOpen }) => {
         </div>
       </section>
       <div className="flex justify-end mt-4">
-        <Button type="primary" size="large">Print</Button>
+        <Button type="primary" size="large" onClick={handlePrint}>
+          Print
+        </Button>
       </div>
     </Modal>
   );

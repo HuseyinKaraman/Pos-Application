@@ -2,15 +2,17 @@ import { Button, message } from "antd";
 import { ClearOutlined, PlusOutlined, MinusOutlined } from "@ant-design/icons";
 import { useSelector, useDispatch } from "react-redux";
 import { deleteFromCart, increaseQuantity, decreaseQuantity, reset } from "../../redux/cartSlice";
+import {useNavigate} from 'react-router-dom'
 
 const CartTotals = () => {
   const dispatch = useDispatch();
+  const navigate = useNavigate();
   const { cartItems, total, tax } = useSelector((state) => state.cart);
 
   return (
     <div className="flex flex-col h-full">
       <h1 className="bg-blue-600 text-center py-4 text-white font-bold">Products in the basket</h1>
-      <ul className="cart-items flex flex-col gap-y-3 p-2 overflow-y-auto">
+      <ul className="cart-items flex flex-col gap-y-3 p-2 overflow-auto">
         {cartItems.length > 0 ? (
           cartItems.map((item) => (
             <li className="cart-item flex justify-between" key={item.product._id}>
@@ -60,7 +62,7 @@ const CartTotals = () => {
                 ></Button>
               </div>
             </li>
-          ))
+          )).reverse()
         ) : (
           <h1 className="text-center">Cart Is Empty</h1>
         )}
@@ -82,7 +84,7 @@ const CartTotals = () => {
         </div>
       </div>
       <div className="py-2 px-2">
-        <Button type="primary" className="w-full" disabled={cartItems.length === 0}>
+        <Button type="primary" className="w-full" disabled={cartItems.length === 0} onClick={()=>navigate("/cart")}>
           Order
         </Button>
         <Button

@@ -1,89 +1,207 @@
-import {useState} from "react";
-import { Button, Card, Table } from "antd";
+import { useEffect, useRef, useState } from "react";
+import { Button, Input, Space, Spin, Table } from "antd";
 import PrintBill from "../components/bills/PrintBill";
 import Header from "../components/header/Header";
+import Highlighter from "react-highlight-words";
+import { SearchOutlined, LoadingOutlined } from "@ant-design/icons";
 
-const columns = [
-  {
-    title: "Image",
-    dataIndex: "image",
-    key: "image",
-    render: (src) => <img className="h-20 w-20 object-cover" src={src} alt="cat" />,
-  },
-  {
-    title: "Product Name",
-    dataIndex: "productname",
-    key: "productname",
-  },
-  {
-    title: "Category",
-    dataIndex: "category",
-    key: "category",
-  },
-  {
-    title: "Unit Price",
-    dataIndex: "unitprice",
-    key: "unitprice",
-    render: (text) => <span>{text} ₺</span>,
-  }
-];
+const antIcon = (
+  <LoadingOutlined
+    style={{
+      fontSize: 60,
+    }}
+    spin
+  />
+);
 
 const BillPage = () => {
+  const [billItems, setBilItems] = useState();
+  const [isModalOpen, setIsModalOpen] = useState(false);
+  const [customer, setCustomer] = useState();
 
-    const [isModalOpen, setIsModalOpen] = useState(false);
- 
+  // adding filter panel
+  const [searchText, setSearchText] = useState("");
+  const [searchedColumn, setSearchedColumn] = useState("");
+  const searchInput = useRef(null);
 
-  const dataSource = [
+  const handleSearch = (selectedKeys, confirm, dataIndex) => {
+    confirm();
+    setSearchText(selectedKeys[0]);
+    setSearchedColumn(dataIndex);
+  };
+  const handleReset = (clearFilters) => {
+    setSearchText("");
+    clearFilters();
+  };
+  const getColumnSearchProps = (dataIndex) => ({
+    filterDropdown: ({ setSelectedKeys, selectedKeys, confirm, clearFilters, close }) => (
+      <div className="p-8" onKeyDown={(e) => e.stopPropagation()}>
+        <Input
+          ref={searchInput}
+          placeholder={`Search ${dataIndex}`}
+          value={selectedKeys[0]}
+          onChange={(e) => setSelectedKeys(e.target.value ? [e.target.value] : [])}
+          onPressEnter={() => handleSearch(selectedKeys, confirm, dataIndex)}
+          className="mb-8 block"
+        />
+        <Space>
+          <Button
+            type="primary"
+            onClick={() => handleSearch(selectedKeys, confirm, dataIndex)}
+            icon={<SearchOutlined />}
+            size="small"
+            className="w-[90px]"
+          >
+            Search
+          </Button>
+          <Button
+            onClick={() => {
+              clearFilters && handleReset(clearFilters);
+              confirm();
+            }}
+            size="small"
+            className="w-[90px]"
+          >
+            Reset
+          </Button>
+          <Button type="link" size="small" onClick={() => close()}>
+            close
+          </Button>
+        </Space>
+      </div>
+    ),
+    filterIcon: (filtered) => (
+      <SearchOutlined
+        style={{
+          color: filtered ? "#1890ff" : undefined,
+        }}
+      />
+    ),
+    onFilter: (value, record) => record[dataIndex].toString().toLowerCase().includes(value.toLowerCase()),
+    onFilterDropdownOpenChange: (visible) => {
+      if (visible) {
+        setTimeout(() => searchInput.current?.select(), 100);
+      }
+    },
+    render: (_, record) =>
+      searchedColumn === dataIndex ? (
+        <Highlighter
+          highlightStyle={{
+            backgroundColor: "#ffc069",
+            padding: 0,
+          }}
+          searchWords={[searchText]}
+          autoEscape
+          textToHighlight={record[dataIndex]}
+        />
+      ) : (
+        record[dataIndex]
+      ),
+  });
+
+  useEffect(() => {
+    const getBills = async () => {
+      try {
+        const res = await fetch(process.env.REACT_APP_SERVER_URL + "/api/bills/getAll");
+        const data = await res.json();
+        setBilItems(data);
+      } catch (error) {
+        console.log(error);
+      }
+    };
+
+    getBills();
+  }, []);
+
+  const columns = [
     {
-      key: "1",
-      productname: "Mike",
-      category: "yemek",
-      image: "https://images.hindustantimes.com/img/2022/08/07/550x309/cat_1659882617172_1659882628989_1659882628989.jpg",
-      unit: 5,
-      unitprice: 3,
-      totalprice: 15,
+      title: "Customer Name",
+      dataIndex: "customerName",
+      key: "customerName",
+      width: "4%",
+      ...getColumnSearchProps("customerName"),
     },
     {
-      key: "2",
-      productname: "John",
-      category: "icecek",
-      image: "https://images.hindustantimes.com/img/2022/08/07/550x309/cat_1659882617172_1659882628989_1659882628989.jpg",
-      unit: 5,
-      unitprice: 3,
-      totalprice: 15,
+      title: "Phone Number",
+      dataIndex: "phoneNumber",
+      key: "phoneNumber",
+      width: "4%",
+      ...getColumnSearchProps("phoneNumber"),
+    },
+    {
+      title: "Created At",
+      dataIndex: "createdAt",
+      key: "createdAt",
+      width: "4%",
+      render: (text) => {
+        return <span>{text.substring(0, 10)}</span>;
+      },
+    },
+    {
+      title: "Payment Mode",
+      dataIndex: "paymentMode",
+      key: "paymentMode",
+      width: "4%",
+      ...getColumnSearchProps("paymentMode"),
+    },
+    {
+      title: "Total Price",
+      width: "4%",
+      render: (_, record) => {
+        return <span>{(record.subTotal + (record.subTotal * record.taxRate) / 100).toFixed(2)}₺</span>;
+      },
+      sorter: (item1, item2) => item1.subTotal + (item1.subTotal * item1.taxRate) / 100 - (item2.subTotal + (item2.subTotal * item2.taxRate) / 100),
+    },
+    {
+      title: "Action",
+      key: "action",
+      width: "4%",
+      render: (_, record) => {
+        return (
+          <Button
+            type="link"
+            className="pl-0"
+            onClick={() => {
+              setIsModalOpen(true);
+              setCustomer(record);
+            }}
+          >
+            Print
+          </Button>
+        );
+      },
     },
   ];
 
   return (
     <>
-      <Header/>
-      <div className="px-12">
-        <h1 className="text-4xl font-bold text-center mb-4">Bills</h1>
-        <Table
-          dataSource={dataSource}
-          columns={columns}
-          bordered
-          size="middle"
-          pagination={false}
-          // pagination={{
-          //   pageSize: 5,
-          //   position: ["none", "bottomCenter"],
-          // }}
-          scroll={{
-            y: 350,
-          }}
-        />
-        <div className="cart-total flex justify-end mt-4">
-          <Card className="md:w-80">
-            <Button type="primary" className="w-full mt-4" size="large" onClick={()=>setIsModalOpen(true)}>
-              Print Bill
-            </Button>
-          </Card>
+      <Header />
+      <h1 className="text-4xl font-bold text-center mb-4">Bills</h1>
+      {billItems ? (
+        <div className="px-12">
+          <Table
+            dataSource={billItems}
+            columns={columns}
+            bordered
+            size="middle"
+            pagination={false}
+            scroll={{
+              x: 840,
+              y: 500,
+            }}
+            rowKey={"_id"}
+          />
         </div>
-      </div>
-      <PrintBill isModalOpen={isModalOpen} setIsModalOpen={setIsModalOpen}/>
+      ) : (
+        <Spin className="flex justify-center items-center h-[80vh] p-16" indicator={antIcon} />
+      )}
+      {customer && <PrintBill isModalOpen={isModalOpen} setIsModalOpen={setIsModalOpen} customer={customer} />}
     </>
   );
 };
 
 export default BillPage;
+
+// (
+//
+// )

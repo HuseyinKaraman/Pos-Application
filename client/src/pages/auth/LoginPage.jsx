@@ -17,7 +17,7 @@ const LoginPage = () => {
       });
       if (res.status === 200) {
         const user = await res.json();
-        localStorage.setItem("postUser", JSON.stringify({ id: user._id, username: user.username, email: user.email }));
+        localStorage.setItem("posUser", JSON.stringify({ id: user._id, username: user.username, email: user.email }));
         message.success("User is successfully login!");
         navigate("/");
       } else {

@@ -1,11 +1,13 @@
 import React from "react";
 import { Input, Badge, message } from "antd";
 import { SearchOutlined, HomeOutlined, ShoppingCartOutlined, UserOutlined, BarChartOutlined, LogoutOutlined, CopyOutlined } from "@ant-design/icons";
-import { Link, useNavigate } from "react-router-dom";
+import { Link, useNavigate, useLocation, NavLink } from "react-router-dom";
 import { useSelector } from "react-redux";
+import "./headerstyle.css";
 
-function Header() {
+function Header({ setSearch }) {
   const navigate = useNavigate();
+  const { pathname } = useLocation();
   const cart = useSelector((state) => state.cart.cartItems);
 
   const logOut = () => {
@@ -16,6 +18,10 @@ function Header() {
     }
   };
 
+  const changehandle = (e) => {
+    setSearch(e.target.value.toLowerCase());
+  };
+
   return (
     <div className="border-b mb-6">
       <header className="py-3 px-6 flex justify-between items-center gap-10">
@@ -24,48 +30,50 @@ function Header() {
             <h2 className="text-2xl font-bold md:text-4xl">MYPOS</h2>
           </Link>
         </div>
-        <div className="header-search flex-1 flex justify-center">
-          <Input prefix={<SearchOutlined />} placeholder="search product..." size="large" className="rounded-full max-w-[800px]" />
+        <div className="header-search flex-1 flex justify-center" onClick={() => pathname !== "/" && navigate("/")}>
+          <Input
+            prefix={<SearchOutlined />}
+            placeholder="search product..."
+            size="large"
+            className="rounded-full max-w-[800px]"
+            onChange={changehandle}
+          />
         </div>
-        <div
-          className="menu-links flex justify-between items-center gap-4
-              md:static z-50 fixed bottom-0 left-0 md:w-auto w-screen md:bg-transparent bg-white md:border-t-0 border-t
-              md:px-0 px-6 py-1 md:py-0"
-        >
-          <Link to="/" className="menu-link flex flex-col hover:text-amber-600 hover:scale-110 transition-all">
+        <div className="menu-links">
+          <NavLink to="/" className={({ isActive }) => (isActive ? "active menu-link" : "menu-link")}>
             <HomeOutlined className="text-2xl" />
             <span className="text-[18px]">Home</span>
-          </Link>
+          </NavLink>
           <Badge count={cart.length} offset={[-2, 0]} size="small" className="hover:scale-110 hidden md:flex">
-            <Link to="/cart" className="menu-link flex flex-col hover:text-amber-600 hover:scale-110 transition-all">
+            <NavLink to="/cart" className={({ isActive }) => (isActive ? "active menu-link" : "menu-link")}>
               <ShoppingCartOutlined className="text-2xl -mt-1" />
               <span className="text-[18px]">Cart</span>
-            </Link>
+            </NavLink>
           </Badge>
-          <Link to="/bills" className="menu-link flex flex-col hover:text-amber-600 hover:scale-110 transition-all">
+          <NavLink to="/bills" className={({ isActive }) => (isActive ? "active menu-link" : "menu-link")}>
             <CopyOutlined className="text-2xl" />
             <span className="text-[18px]">Bills</span>
-          </Link>
-          <Link to="/customers" className="menu-link flex flex-col hover:text-amber-600 hover:scale-110 transition-all">
+          </NavLink>
+          <NavLink to="/customers" className={({ isActive }) => (isActive ? "active menu-link" : "menu-link")}>
             <UserOutlined className="text-2xl" />
             <span className="text-[18px]">Users</span>
-          </Link>
-          <Link to="/statistic" className="menu-link flex flex-col hover:text-amber-600 hover:scale-110 transition-all">
+          </NavLink>
+          <NavLink to="/statistic" className={({ isActive }) => (isActive ? "active menu-link" : "menu-link")}>
             <BarChartOutlined className="text-2xl" />
             <span className="text-[18px]">Statistics</span>
-          </Link>
+          </NavLink>
           <div onClick={logOut}>
-            <Link className="menu-link flex flex-col hover:text-amber-600 hover:scale-110 transition-all">
+            <Link className="menu-link">
               <LogoutOutlined className="text-2xl" />
               <span className="text-[18px]">Logout</span>
             </Link>
           </div>
         </div>
         <Badge count={cart.length} offset={[0, 3]} size="small" className="hover:scale-110 md:hidden">
-          <Link to="/cart" className="menu-link flex flex-col hover:text-amber-600 hover:scale-110 transition-all">
+          <NavLink to="/cart" className={({ isActive }) => (isActive ? "active menu-link" : "menu-link")}>
             <ShoppingCartOutlined className="text-3xl" />
             <span className="text-lg">Cart</span>
-          </Link>
+          </NavLink>
         </Badge>
       </header>
     </div>

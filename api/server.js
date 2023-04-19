@@ -4,7 +4,6 @@ const dotenv = require("dotenv");
 var cors = require('cors')
 const logger = require("morgan") // gelen istekleri görmemizi saglayacaktır
 
-
 // routes 
 const categoryRoute = require("./routes/categories.js");
 const productRoute = require("./routes/products.js");
@@ -22,7 +21,6 @@ dotenv.config();
 app.use(logger("dev"));
 app.use(express.json());  
 app.use(cors());
-
 
 const connect = async() => {
   try {

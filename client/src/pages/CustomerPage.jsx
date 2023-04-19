@@ -1,147 +1,163 @@
-import { Table } from "antd";
+import { useEffect, useRef, useState } from "react";
+import { Button, Input, Space, Spin, Table } from "antd";
 import Header from "../components/header/Header";
+import { LoadingOutlined, SearchOutlined } from "@ant-design/icons";
+import Highlighter from "react-highlight-words";
 
-const columns = [
-  {
-    title: "Image",
-    dataIndex: "image",
-    key: "image",
-    render: (src) => <img className="h-20 w-20 object-cover" src={src} alt="cat" />,
-  },
-  {
-    title: "Product Name",
-    dataIndex: "productname",
-    key: "productname",
-  },
-  {
-    title: "Category",
-    dataIndex: "category",
-    key: "category",
-  },
-  {
-    title: "Unit Price",
-    dataIndex: "unitprice",
-    key: "unitprice",
-    render: (text) => <span>{text} ₺</span>,
-  }
-];
+const antIcon = (
+  <LoadingOutlined
+    style={{
+      fontSize: 60,
+    }}
+    spin
+  />
+);
 
 const CustomerPage = () => {
+  const [billItems, setBilItems] = useState();
 
-  const dataSource = [
+  // adding filter panel
+  const [searchText, setSearchText] = useState("");
+  const [searchedColumn, setSearchedColumn] = useState("");
+  const searchInput = useRef(null);
+
+  const handleSearch = (selectedKeys, confirm, dataIndex) => {
+    confirm();
+    setSearchText(selectedKeys[0]);
+    setSearchedColumn(dataIndex);
+  };
+  const handleReset = (clearFilters) => {
+    setSearchText("");
+    clearFilters();
+  };
+  const getColumnSearchProps = (dataIndex) => ({
+    filterDropdown: ({ setSelectedKeys, selectedKeys, confirm, clearFilters, close }) => (
+      <div className="p-4" onKeyDown={(e) => e.stopPropagation()}>
+        <Input
+          ref={searchInput}
+          placeholder={`Search ${dataIndex}`}
+          value={selectedKeys[0]}
+          onChange={(e) => setSelectedKeys(e.target.value ? [e.target.value] : [])}
+          onPressEnter={() => handleSearch(selectedKeys, confirm, dataIndex)}
+          className="mb-4 block"
+        />
+        <Space>
+          <Button
+            type="primary"
+            onClick={() => handleSearch(selectedKeys, confirm, dataIndex)}
+            icon={<SearchOutlined />}
+            size="small"
+            className="w-[90px]"
+          >
+            Search
+          </Button>
+          <Button
+            onClick={() => {
+              clearFilters && handleReset(clearFilters);
+              confirm();
+            }}
+            size="small"
+            className="w-[90px]"
+          >
+            Reset
+          </Button>
+          <Button type="link" size="small" onClick={() => close()}>
+            close
+          </Button>
+        </Space>
+      </div>
+    ),
+    filterIcon: (filtered) => (
+      <SearchOutlined
+        style={{
+          color: filtered ? "#1890ff" : undefined,
+        }}
+      />
+    ),
+    onFilter: (value, record) => record[dataIndex].toString().toLowerCase().includes(value.toLowerCase()),
+    onFilterDropdownOpenChange: (visible) => {
+      if (visible) {
+        setTimeout(() => searchInput.current?.select(), 100);
+      }
+    },
+    render: (_, record) =>
+      searchedColumn === dataIndex ? (
+        <Highlighter
+          highlightStyle={{
+            backgroundColor: "#ffc069",
+            padding: 0,
+          }}
+          searchWords={[searchText]}
+          autoEscape
+          textToHighlight={record[dataIndex]}
+        />
+      ) : (
+        record[dataIndex]
+      ),
+  });
+
+  useEffect(() => {
+    const getBills = async () => {
+      try {
+        const res = await fetch(process.env.REACT_APP_SERVER_URL + "/api/bills/getAll");
+        const data = await res.json();
+        setBilItems(data);
+      } catch (error) {
+        console.log(error);
+      }
+    };
+
+    getBills();
+  }, []);
+
+  const columns = [
     {
-      key: "1",
-      productname: "Mike",
-      category: "yemek",
-      image: "https://images.hindustantimes.com/img/2022/08/07/550x309/cat_1659882617172_1659882628989_1659882628989.jpg",
-      unit: 5,
-      unitprice: 3,
-      totalprice: 15,
+      title: "Customer Name",
+      dataIndex: "customerName",
+      key: "customerName",
+      ...getColumnSearchProps("customerName"),
     },
     {
-      key: "2",
-      productname: "John",
-      category: "icecek",
-      image: "https://images.hindustantimes.com/img/2022/08/07/550x309/cat_1659882617172_1659882628989_1659882628989.jpg",
-      unit: 5,
-      unitprice: 3,
-      totalprice: 15,
+      title: "Phone Number",
+      dataIndex: "phoneNumber",
+      key: "phoneNumber",
     },
     {
-      key: "3",
-      productname: "John",
-      category: "icecek",
-      image: "https://images.hindustantimes.com/img/2022/08/07/550x309/cat_1659882617172_1659882628989_1659882628989.jpg",
-      unit: 5,
-      unitprice: 3,
-      totalprice: 15,
-    },
-    {
-      key: "4",
-      productname: "John",
-      category: "icecek",
-      image: "https://images.hindustantimes.com/img/2022/08/07/550x309/cat_1659882617172_1659882628989_1659882628989.jpg",
-      unit: 5,
-      unitprice: 3,
-      totalprice: 15,
-    },
-    {
-      key: "5",
-      productname: "John",
-      category: "icecek",
-      image: "https://images.hindustantimes.com/img/2022/08/07/550x309/cat_1659882617172_1659882628989_1659882628989.jpg",
-      unit: 5,
-      unitprice: 3,
-      totalprice: 15,
-    },
-    {
-      key: "6",
-      productname: "John",
-      category: "icecek",
-      image: "https://images.hindustantimes.com/img/2022/08/07/550x309/cat_1659882617172_1659882628989_1659882628989.jpg",
-      unit: 5,
-      unitprice: 3,
-      totalprice: 15,
-    },
-    {
-      key: "7",
-      productname: "John",
-      category: "icecek",
-      image: "https://images.hindustantimes.com/img/2022/08/07/550x309/cat_1659882617172_1659882628989_1659882628989.jpg",
-      unit: 5,
-      unitprice: 3,
-      totalprice: 15,
-    },
-    {
-      key: "8",
-      productname: "John",
-      category: "icecek",
-      image: "https://images.hindustantimes.com/img/2022/08/07/550x309/cat_1659882617172_1659882628989_1659882628989.jpg",
-      unit: 5,
-      unitprice: 3,
-      totalprice: 15,
-    },
-    {
-      key: "9",
-      productname: "John",
-      category: "icecek",
-      image: "https://images.hindustantimes.com/img/2022/08/07/550x309/cat_1659882617172_1659882628989_1659882628989.jpg",
-      unit: 5,
-      unitprice: 3,
-      totalprice: 15,
-    },
-    {
-      key: "10",
-      productname: "John",
-      category: "icecek",
-      image: "https://images.hindustantimes.com/img/2022/08/07/550x309/cat_1659882617172_1659882628989_1659882628989.jpg",
-      unit: 5,
-      unitprice: 3,
-      totalprice: 15,
+      title: "Order Date",
+      dataIndex: "createdAt",
+      key: "createdAt",
+      render: (text) => {
+        return <span>{text.substring(0, 10)}</span>;
+      },
     },
   ];
 
   return (
     <>
       <Header />
-      <div className="px-12">
-        <h1 className="text-4xl font-bold text-center mb-4">Customers</h1>
-        <Table
-          dataSource={dataSource}
-          columns={columns}
-          bordered
-          size="middle"
-          pagination={{
-            pageSize: 7,
-            position: ["none", "bottomCenter"],
-          }}
-          scroll={{
-            y: 600,
-          }}
-        />
-      </div>
+      <h1 className="text-4xl font-bold text-center mb-4">Customers</h1>
+      {billItems ? (
+        <div className="px-12">
+          <Table
+            dataSource={billItems}
+            columns={columns}
+            bordered
+            size="middle"
+            pagination={{
+              pageSize: 7,
+              position: ["none", "bottomRight"],
+            }}
+            scroll={{
+              x: 500,
+              y: 600,
+            }}
+            rowKey={"_id"}
+          />
+        </div>
+      ) : (
+        <Spin className="flex justify-center items-center h-[80vh] p-16" indicator={antIcon} />
+      )}
     </>
   );
 };
-
 export default CustomerPage;

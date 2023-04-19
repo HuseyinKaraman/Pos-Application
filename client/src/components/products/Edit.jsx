@@ -57,9 +57,9 @@ const Edit = ({ products, setProducts, categories }) => {
       title: "Image",
       dataIndex: "img",
       key: "img",
-      width: "6%",
+      width: "5%",
       render: (_, record) => {
-        return <img src={record.img} alt="" className="w-full h-24 md:h-32 object-cover" />;
+        return<img src={record.img} alt="" className="w-full h-32 object-cover"  />;
       },
     },
     {
@@ -67,14 +67,17 @@ const Edit = ({ products, setProducts, categories }) => {
       dataIndex: "price",
       width: "4%",
       key: "price",
+      render: (text) => {
+        return <p className="text-lg md:text-2xl text-center">{text}₺</p>
+      }
     },
     {
       title: "Category",
       dataIndex: "categoryId",
       width: "5%",
-      key: "category",
+      key: "categoryId",
       render: (_,record)=>{
-        return categories.filter((category)=>category._id === record.categoryId)[0]?.title;
+        return <p className="text-lg md:text-2xl text-center">{record.categoryId.title}</p>;
       }
     },
     {
@@ -104,18 +107,18 @@ const Edit = ({ products, setProducts, categories }) => {
   ];
 
   return (
-    <div className="max-w-[1600px] mx-auto pb-24 md:overflow-x-hidden">
+    <div className="max-w-[1600px] mx-auto pb-24 md:overflow-hidden">
       <Table
         bordered
         dataSource={products}
         columns={columns}
         rowKey={"_id"}
         pagination={{
-          pageSize: 6,
+          pageSize: 5,
         }}
         scroll={{
-          x: 500,
-          y: 800,
+          x: 600,
+          y: 720,
         }}
       />
 

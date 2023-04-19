@@ -5,8 +5,7 @@ const router = require("express").Router();
 //! Get All
 router.get("/getAll",async (req,res)=>{
     try {
-      const products = await Product.find()
-                                    // .populate("categoryId"); //! ilişkili oldugu tablodan beriyi alabiliriz!
+      const products = await Product.find().populate("categoryId","title _id"); //! ilişkili oldugu tablodan beriyi alabiliriz!
       res.status(200).json(products);
   } catch (error) {
       res.status(500).json(error);

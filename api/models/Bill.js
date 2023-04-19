@@ -3,7 +3,7 @@ const mongoose = require("mongoose");
 // https://mongoosejs.com/docs/guide.html#schemas
 const BillSchema = mongoose.Schema(
   {
-    name: {
+    customerName: {
       type: String,
       required: true,
     },
@@ -16,6 +16,10 @@ const BillSchema = mongoose.Schema(
       required: true,
     },
     subTotal: {
+      type: Number,
+      required: true,
+    },
+    taxRate: {
       type: Number,
       required: true,
     },

@@ -7,9 +7,18 @@ import CustomerPage from "./pages/CustomerPage";
 import RegisterPage from "./pages/auth/RegisterPage";
 import LoginPage from "./pages/auth/LoginPage";
 import ProductPage from "./pages/ProductPage";
+import { useSelector } from "react-redux";
+import { useEffect } from "react";
 
 function App() {
-  // const location = useLocation();
+
+  const cart = useSelector(state=> state.cart)
+
+  
+  useEffect(() => {
+    localStorage.setItem('cart', JSON.stringify(cart));
+  }, [cart])
+  
 
   return (
     <BrowserRouter>
@@ -31,7 +40,7 @@ function App() {
 export default App;
 
 export const RouteControl = ({ children }) => {
-  if (localStorage.getItem("postUser")) {
+  if (localStorage.getItem("posUser")) {
     return children;
   } else {
     return <Navigate to="/login" />;

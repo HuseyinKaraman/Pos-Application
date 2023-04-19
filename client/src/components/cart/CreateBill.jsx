@@ -1,20 +1,36 @@
-import { Button, Card, Form, Input, Modal, Select } from "antd";
+import { useSelector,useDispatch } from "react-redux";
+import { Button, Card, Form, Input, Modal, Select, message } from "antd";
+import { reset } from "../../redux/cartSlice";
+import { useNavigate } from "react-router-dom";
 
-const layout = {
-  labelCol: {
-    span: 8,
-  },
-  wrapperCol: {
-    span: 16,
-  },
-};
 
 const CreateBill = ({ isModalOpen, setIsModalOpen }) => {
+  const dispatch = useDispatch();
+  const navigate = useNavigate();
+  const { cartItems, total, tax } = useSelector((state) => state.cart);
+
   const handleCancel = () => {
     setIsModalOpen(false);
   };
-  const onFinish = (values) => {
-    console.log("Success:", values);
+
+  const onFinish = async(values) => {
+    try {
+      const res = await fetch(process.env.REACT_APP_SERVER_URL+"/api/bills/create", {
+        method: "POST",
+        body: JSON.stringify({...values, cartItems:cartItems,subTotal:total,taxRate:tax}),
+        headers: { "Content-type": "application/json; charset=UTF-8" },
+      });
+
+      if (res.status === 200) {
+          dispatch(reset());
+          navigate("/bills")
+          message.success("Order is received successfully");
+      }else if (res.status === 500){
+        message.error("Something went wrong");
+      }
+    } catch (error) {
+      message.error(error);
+    }
     setIsModalOpen(false);
   };
 
@@ -30,7 +46,7 @@ const CreateBill = ({ isModalOpen, setIsModalOpen }) => {
   return (
     <Modal title="Order Form" open={isModalOpen} footer={false} onCancel={handleCancel}>
       <Form
-        {...layout}
+        layout="vertical"
         name="nest-messages"
         onFinish={onFinish}
         style={{
@@ -75,19 +91,19 @@ const CreateBill = ({ isModalOpen, setIsModalOpen }) => {
             <Select.Option value="cart">Credit Cart</Select.Option>
           </Select>
         </Form.Item>
-        <Form.Item wrapperCol={{ span: 20, offset: 2 }}>
+        <Form.Item>
           <Card className="w-full" size="small">
             <div className="flex justify-between">
-              <span>SubTotal</span>
-              <span>399₺</span>
+            <span>SubTotal</span>
+              <span>{total}₺</span>
             </div>
             <div className="flex justify-between my-2">
-              <span>KDV Total %8</span>
-              <span className="text-red-600">+27.92₺</span>
+            <span>KDV Total %{tax}</span>
+              <span className="text-red-600">+{((total * tax) / 100).toFixed(2)}</span>
             </div>
             <div className="flex justify-between">
               <b className="text-xl">Total</b>
-              <b className="text-xl">426.92₺</b>
+              <b className="text-xl">{(total + (total * tax) / 100).toFixed(2)}</b>
             </div>
             <div className="flex justify-end">
               <Button type="primary" className="mt-4 w-36" htmlType="submit">
