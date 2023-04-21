@@ -7,7 +7,7 @@ Ayrıca populer ve önemli teknolojiler içermektedir Ant Design, Tailwind CSS v
 <br/>
 
 Projenin Deploy edilmiş ilk hali :: <br/>
-http://hsyn-pos-application.surge.sh <br/>
+https://hsynkrmn-pos-application-react.onrender.com/ <br/>
 
 
 email -> test@test.com <br/>
