@@ -6,9 +6,9 @@ Merhaba, Bu proje MERN(MongoDB, Express.js, React.js, Node.js) Stack teknolojisi
 Ayrıca populer ve önemli teknolojiler içermektedir Ant Design, Tailwind CSS ve Redux-Toolkit.
 <br/>
 
-Projenin Deploy edilmiş ilk hali ::
-https://hsynkrmn-pos-application.netlify.app
-http://hsyn-pos-application.surge.sh
+Projenin Deploy edilmiş ilk hali :: <br/>
+https://hsynkrmn-pos-application.netlify.app <br/>
+http://hsyn-pos-application.surge.sh <br/>
 
 
 email -> test@test.com <br/>
