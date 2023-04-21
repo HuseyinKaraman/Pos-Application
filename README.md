@@ -7,6 +7,7 @@ Ayrıca populer ve önemli teknolojiler içermektedir Ant Design, Tailwind CSS v
 <br/>
 
 Projenin Deploy edilmiş ilk hali ::
+https://hsynkrmn-pos-application.netlify.app
 http://hsyn-pos-application.surge.sh
 
 
